@@ -8,7 +8,7 @@
     <!-- CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- CSS do Bootstrap -->
+    <!-- CSS do Bootstrap (apenas para grid e componentes base) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
@@ -18,49 +18,59 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
+        /* ===== RESET E BASE ===== */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1d1d1f;
+            line-height: 1.5;
         }
         
-        .navbar-custom {
-            background-color: #1a4d2e !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        /* ===== NAVBAR MINIMALISTA (BRANCO) ===== */
+        .navbar-minimal {
+            background-color: #ffffff !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            padding: 16px 0;
         }
         
-        .navbar-custom .navbar-brand {
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-        }
-        
-        .navbar-custom .nav-link {
-            color: rgba(255,255,255,0.9) !important;
+        .navbar-minimal .navbar-brand {
+            color: #1d1d1f;
             font-weight: 500;
-            margin: 0 10px;
+            font-size: 20px;
+            letter-spacing: -0.3px;
         }
         
-        .navbar-custom .nav-link:hover {
-            color: white !important;
+        .navbar-minimal .nav-link {
+            color: #1d1d1f !important;
+            font-weight: 400;
+            margin: 0 12px;
+            font-size: 16px;
+            transition: color 0.2s ease;
         }
         
-        .navbar-custom .nav-link.active {
-            color: white !important;
-            border-bottom: 3px solid #ffc107;
+        .navbar-minimal .nav-link:hover {
+            color: #007aff !important;
         }
         
+        .navbar-minimal .nav-link.active {
+            color: #007aff !important;
+            font-weight: 500;
+        }
+        
+        /* Logo */
         .logo-ifb {
-            height: 70px !important;
+            height: 56px !important;
             width: auto !important;
-            background-color: white !important;
+            background-color: transparent !important;
             padding: 0 !important;
-            border-radius: 15px !important;
+            border-radius: 0 !important;
             filter: none !important;
-            margin-right: 15px !important;
+            margin-right: 16px !important;
         }
         
+        /* ===== CARROSSEL ===== */
         .carrossel-item {
-            height: 500px;
+            height: 560px;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -73,7 +83,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
         }
         
         .carrossel-content {
@@ -81,92 +91,243 @@
             z-index: 10;
             color: white;
             text-align: center;
-            padding-top: 150px;
+            padding-top: 200px;
         }
         
         .carrossel-content h2 {
-            font-size: 48px;
-            font-weight: bold;
+            font-size: 52px;
+            font-weight: 600;
+            letter-spacing: -1px;
             margin-bottom: 20px;
         }
         
         .carrossel-content p {
-            font-size: 18px;
-            max-width: 700px;
+            font-size: 19px;
+            max-width: 600px;
             margin: 0 auto 30px;
+            opacity: 0.9;
         }
         
-        .badge-tema {
-            background-color: #1a4d2e;
+        /* Botões minimalistas (azul) */
+        .btn-minimal {
+            background-color: #007aff;
             color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 16px;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
         }
         
+        .btn-minimal:hover {
+            background-color: #0051b3;
+            color: white;
+            transform: scale(1.02);
+        }
+        
+        .btn-outline-minimal {
+            background-color: transparent;
+            color: #007aff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 16px;
+            border: 1px solid #007aff;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-outline-minimal:hover {
+            background-color: #007aff;
+            color: white;
+        }
+        
+        /* ===== SEÇÕES ===== */
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
+            font-size: 18px;
+            color: #6c6c70;
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+        
+        /* Controles do mapa */
         .mapa-container {
-            background-color: white;
-            padding: 40px 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+            background-color: #f9f9fb;
+            padding: 60px 0;
         }
         
         .controle-mapa {
             background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+            border: 1px solid #e9e9ef;
+        }
+        
+        .controle-mapa h4 {
+            color: #1d1d1f;
+            font-weight: 600;
+            font-size: 20px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c6c70;
+            margin-bottom: 6px;
+        }
+        
+        .form-select {
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border: 1px solid #e9e9ef;
+            background-color: white;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+        
+        .form-select:focus {
+            border-color: #007aff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
         }
         
         #mapa {
-            height: 500px;
+            height: 520px;
             width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e9e9ef;
         }
         
-        .tabela-dados {
+        .info-box {
             background: white;
-            border-radius: 10px;
+            border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-top: 30px;
+            border: 1px solid #e9e9ef;
+            margin-top: 24px;
         }
         
-        .footer {
-            background-color: #0a2b1a;
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 40px;
+        .badge-minimal {
+            background-color: #e9e9ef;
+            color: #1d1d1f;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
         }
         
-        .footer a {
-            color: rgba(255,255,255,0.8);
+        /* Cards de equipe */
+        .card-equipe {
+            background: white;
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #e9e9ef;
+        }
+        
+        .card-equipe:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.04);
+        }
+        
+        .card-equipe i {
+            color: #007aff;
+            margin-bottom: 16px;
+        }
+        
+        .card-equipe h5 {
+            font-weight: 600;
+            font-size: 18px;
+            color: #1d1d1f;
+        }
+        
+        .card-equipe .text-muted {
+            color: #6c6c70 !important;
+            font-size: 14px;
+        }
+        
+        .card-equipe .small {
+            font-size: 13px;
+            color: #8e8e93;
+        }
+        
+        /* Footer minimalista */
+        .footer-minimal {
+            background-color: #f9f9fb;
+            color: #6c6c70;
+            padding: 48px 0 32px;
+            margin-top: 60px;
+            border-top: 1px solid #e9e9ef;
+        }
+        
+        .footer-minimal h5 {
+            color: #1d1d1f;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-minimal a {
+            color: #6c6c70;
             text-decoration: none;
+            font-size: 14px;
         }
         
-        .footer a:hover {
-            color: white;
+        .footer-minimal a:hover {
+            color: #007aff;
         }
         
         .apoio-img {
-            height: 40px;
+            height: 36px;
             margin: 10px;
-            filter: brightness(0) invert(1);
             opacity: 0.7;
+        }
+        
+        /* Separador */
+        .hr-light {
+            background-color: #e9e9ef;
+            margin: 24px 0;
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .carrossel-content h2 {
+                font-size: 32px;
+            }
+            .carrossel-item {
+                height: 480px;
+            }
+            .carrossel-content {
+                padding-top: 140px;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+<!-- NAVBAR MINIMALISTA -->
+<nav class="navbar navbar-expand-lg navbar-minimal sticky-top">
     <div class="container">
         <a class="navbar-brand" href="#">
             <img src="logo-ifb.png" alt="IFB" class="logo-ifb" onerror="this.style.display='none'">
-            Base de Dados Geomorfométricos
+            GEODatabase
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -174,7 +335,6 @@
                 <li class="nav-item"><a class="nav-link active" href="#home">Início</a></li>
                 <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
                 <li class="nav-item"><a class="nav-link" href="#mapa-section">Mapa</a></li>
-                <li class="nav-item"><a class="nav-link" href="#dados">Dados</a></li>
                 <li class="nav-item"><a class="nav-link" href="#equipe">Equipe</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
             </ul>
@@ -190,25 +350,25 @@
                 <div class="carrossel-content container">
                     <h2>Mapeamento de Alta Resolução</h2>
                     <p>Dados geomorfométricos em escala 1:100.000 para todo o território brasileiro</p>
-                    <a href="#mapa-section" class="btn btn-warning btn-lg">Explorar Mapa</a>
+                    <a href="#mapa-section" class="btn-minimal">Explorar Mapa →</a>
                 </div>
             </div>
         </div>
         <div class="swiper-slide">
-            <div class="carrossel-item" style="background-image: url('https://www.cnj.jus.br/wp-content/uploads/2025/07/2025-06-18-sirenejud-mapa-interativo-permite-consulta-a-dados-ok-2048x1152.jpg')">
+            <div class="carrossel-item" style="background-image: url('https://images.unsplash.com/photo-1582201942986-13c3b3f7c0a8?auto=format&fit=crop&w=1920&q=80')">
                 <div class="carrossel-content container">
                     <h2>Dados Colaborativos</h2>
                     <p>Compartilhe e acesse dados geoespaciais produzidos pela comunidade acadêmica</p>
-                    <a href="#dados" class="btn btn-warning btn-lg">Ver Dados</a>
+                    <a href="#mapa-section" class="btn-minimal">Ver Dados →</a>
                 </div>
             </div>
         </div>
         <div class="swiper-slide">
-            <div class="carrossel-item" style="background-image: url('https://conhecimentocientifico.r7.com/wp-content/uploads/2020/09/vocoroca-o-que-e-formacao-causa-e-impacto-socio-ambiental-1.png.webp')">
+            <div class="carrossel-item" style="background-image: url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1920&q=80')">
                 <div class="carrossel-content container">
                     <h2>Riscos Geomorfológicos</h2>
                     <p>Suporte à análise de suscetibilidade, planejamento territorial e prevenção de desastres</p>
-                    <a href="#sobre" class="btn btn-warning btn-lg">Conheça o Projeto</a>
+                    <a href="#sobre" class="btn-minimal">Conheça o Projeto →</a>
                 </div>
             </div>
         </div>
@@ -224,18 +384,18 @@
         <div class="controle-mapa">
             <div class="row align-items-center">
                 <div class="col-md-4">
-                    <h4 style="color: #1a4d2e;">Visualizador de Dados</h4>
-                    <p class="text-muted">Selecione as camadas para visualizar</p>
+                    <h4>Visualizador de Dados</h4>
+                    <p class="text-muted small">Selecione as camadas para visualizar</p>
                 </div>
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">Tema</label>
                             <select class="form-select" id="temaSelect">
-                                <option value="todos"> Todos os temas</option>
-                                <option value="riscos"> Riscos geomorfológicos</option>
-                                <option value="agua"> Recursos hídricos</option>
-                                <option value="uso"> Uso e cobertura</option>
+                                <option value="todos">Todos os temas</option>
+                                <option value="riscos">Riscos geomorfológicos</option>
+                                <option value="agua">Recursos hídricos</option>
+                                <option value="uso">Uso e cobertura</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -254,15 +414,15 @@
         <!-- MAPA -->
         <div id="mapa"></div>
         
-        <div class="tabela-dados">
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="info-box">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                    <i class="fas fa-info-circle text-success"></i>
-                    <span class="ms-2">Camada ativa: <strong id="camadaAtiva">Cobertura do Solo 2019</strong></span>
+                    <i class="fas fa-info-circle" style="color: #007aff;"></i>
+                    <span class="ms-2" style="color: #6c6c70;">Camada ativa: <strong id="camadaAtiva" style="color: #1d1d1f;">Cobertura do Solo 2019</strong></span>
                 </div>
                 <div>
-                    <span class="badge-tema me-2">Escala 1:100.000</span>
-                    <span class="badge-tema">SIRGAS 2000</span>
+                    <span class="badge-minimal me-2">Escala 1:100.000</span>
+                    <span class="badge-minimal">SIRGAS 2000</span>
                 </div>
             </div>
         </div>
@@ -270,62 +430,68 @@
 </section>
 
 <!-- SOBRE -->
-<section id="sobre" class="container my-5">
+<section id="sobre" class="container my-5 py-4">
     <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <h2 class="text-center mb-4" style="color: #1a4d2e;">Sobre o Projeto</h2>
-            <div class="card p-4">
-                <p>O <strong>GEODatabase</strong> é uma plataforma de dados geoespaciais desenvolvida por bolsistas do CNPq no Instituto Federal de Brasília.</p>
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="section-title">Sobre o Projeto</h2>
+            <p class="section-subtitle">Uma plataforma nacional de dados geomorfométricos para análise de riscos e planejamento territorial</p>
+        </div>
+        <div class="col-lg-10 mx-auto">
+            <div style="border: 1px solid #e9e9ef; border-radius: 24px; padding: 32px;">
+                <p class="fs-5" style="color: #1d1d1f;">O <strong>GEODatabase</strong> é uma plataforma de dados geoespaciais desenvolvida por bolsistas do CNPq no Instituto Federal de Brasília.</p>
                 
-                <h5 class="mt-4">Objetivo</h5>
-                <p>Apresentar a construção de uma base de dados geomorfométrica nacional em alta resolução (1:100.000), integrada em um GEODatabase colaborativo, para subsidiar análises de risco geomorfológico, planejamento territorial e políticas de prevenção de desastres no Brasil.</p>
+                <h5 class="mt-4" style="font-weight: 600;">Objetivo</h5>
+                <p style="color: #6c6c70;">Construir uma base de dados geomorfométrica nacional em alta resolução (1:100.000), integrada em um GEODatabase colaborativo, para subsidiar análises de risco geomorfológico, planejamento territorial e políticas de prevenção de desastres no Brasil.</p>
                 
-                <h5 class="mt-4">Conceitos-chave</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card bg-light p-3">
-                            <strong>Risco geomorfológico</strong>
-                            <p class="small mt-2">Probabilidade de ocorrência de processos naturais (deslizamentos, enchentes) em áreas ocupadas.</p>
+                <h5 class="mt-4" style="font-weight: 600;">Conceitos-chave</h5>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div style="background-color: #f9f9fb; border-radius: 20px; padding: 20px;">
+                            <strong style="color: #1d1d1f;">Risco geomorfológico</strong>
+                            <p class="mt-2 small" style="color: #6c6c70;">Probabilidade de ocorrência de processos naturais (deslizamentos, enchentes) em áreas ocupadas.</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card bg-light p-3">
-                            <strong>GEODatabase</strong>
-                            <p class="small mt-2">Plataforma que integra dados espaciais de alta resolução para análise multiescalar.</p>
+                    <div class="col-md-6 mb-3">
+                        <div style="background-color: #f9f9fb; border-radius: 20px; padding: 20px;">
+                            <strong style="color: #1d1d1f;">GEODatabase</strong>
+                            <p class="mt-2 small" style="color: #6c6c70;">Plataforma que integra dados espaciais de alta resolução para análise multiescalar.</p>
                         </div>
                     </div>
                 </div>
                 
-                <h5 class="mt-4">Metodologia</h5>
-                <p>A base foi construída a partir de MDE hidrologicamente consistente, com derivadas de primeira e segunda ordem (declividade, orientação, amplitude) em escala 1:100.000.</p>
+                <h5 class="mt-4" style="font-weight: 600;">Metodologia</h5>
+                <p style="color: #6c6c70;">A base foi construída a partir de MDE hidrologicamente consistente, com derivadas de primeira e segunda ordem (declividade, orientação, amplitude) em escala 1:100.000.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- EQUIPE -->
-<section id="equipe" class="container my-5">
-    <h2 class="text-center mb-4" style="color: #1a4d2e;">Equipe</h2>
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <div class="card p-4">
-                <i class="fas fa-user-circle fa-4x text-success mb-3"></i>
+<section id="equipe" class="container my-5 py-4">
+    <div class="text-center mb-5">
+        <h2 class="section-title">Equipe</h2>
+        <p class="section-subtitle">Pesquisadores envolvidos no desenvolvimento do GEODatabase</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-equipe">
+                <i class="fas fa-user-circle fa-3x"></i>
                 <h5>Davi Peixoto</h5>
                 <p class="text-muted">Bolsista CNPq</p>
                 <p class="small">davi61640@estudante.ifb.edu.br</p>
             </div>
         </div>
-        <div class="col-md-4 text-center">
-            <div class="card p-4">
-                <i class="fas fa-user-circle fa-4x text-success mb-3"></i>
+        <div class="col-md-4">
+            <div class="card-equipe">
+                <i class="fas fa-user-circle fa-3x"></i>
                 <h5>Beatriz Guedes</h5>
                 <p class="text-muted">Bolsista CNPq</p>
                 <p class="small">beatriz61611@estudante.ifb.edu.br</p>
             </div>
         </div>
-        <div class="col-md-4 text-center">
-            <div class="card p-4">
-                <i class="fas fa-user-tie fa-4x text-success mb-3"></i>
+        <div class="col-md-4">
+            <div class="card-equipe">
+                <i class="fas fa-user-tie fa-3x"></i>
                 <h5>Prof. Gervásio Neto</h5>
                 <p class="text-muted">Orientador</p>
                 <p class="small">gervasio.neto@ifb.edu.br</p>
@@ -334,22 +500,21 @@
     </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
+<!-- FOOTER MINIMALISTA -->
+<footer class="footer-minimal">
     <div class="container">
         <div class="row">
             <div class="col-md-4">
                 <h5>GEODatabase</h5>
-                <p>Plataforma nacional de dados geomorfométricos</p>
-                <p><i class="fas fa-map-marker-alt"></i> Campus Riacho Fundo</p>
+                <p class="small">Plataforma nacional de dados geomorfométricos</p>
+                <p class="small"><i class="fas fa-map-marker-alt me-2"></i> Campus Riacho Fundo - IFB</p>
             </div>
             <div class="col-md-4">
                 <h5>Links Rápidos</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#sobre">Sobre</a></li>
-                    <li><a href="#mapa-section">Mapa</a></li>
-                    <li><a href="#dados">Dados</a></li>
-                    <li><a href="#equipe">Equipe</a></li>
+                <ul class="list-unstyled small">
+                    <li><a href="#sobre" class="text-decoration-none">Sobre</a></li>
+                    <li><a href="#mapa-section" class="text-decoration-none">Mapa</a></li>
+                    <li><a href="#equipe" class="text-decoration-none">Equipe</a></li>
                 </ul>
             </div>
             <div class="col-md-4">
@@ -360,8 +525,8 @@
                 </div>
             </div>
         </div>
-        <hr class="bg-light">
-        <p class="text-center mb-0 small">© 2026 GEODatabase - Todos os direitos reservados</p>
+        <hr class="hr-light">
+        <p class="text-center small mb-0">© 2026 GEODatabase - Todos os direitos reservados</p>
     </div>
 </footer>
 
@@ -388,15 +553,14 @@
         },
     });
     
-    // ===== MAPA COM SUA CAMADA =====
+    // MAPA
     var mapa = L.map('mapa').setView([-15.5, -55.0], 4);
     
-    // Camada base
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mapa);
     
-    // SUA CAMADA DO GEOSERVER
+    // Camada WMS
     var camadaCobertura = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
         layers: 'geodatabase_ifb:cobertura_do_solo_2019',
         format: 'image/png',
@@ -405,7 +569,6 @@
         attribution: 'GEODatabase'
     });
     
-    // Adicionar ao mapa
     camadaCobertura.addTo(mapa);
     
     // Controle de camadas
@@ -419,7 +582,7 @@
     
     L.control.layers(camadasBase, camadasTematicas).addTo(mapa);
     
-    // Atualizar nome da camada ativa quando mudar o select
+    // Atualizar nome da camada ativa
     document.getElementById('camadaSelect').addEventListener('change', function(e) {
         document.getElementById('camadaAtiva').innerText = 
             e.target.options[e.target.selectedIndex].text;
@@ -427,7 +590,7 @@
     
     // Clique no mapa
     mapa.on('click', function(e) {
-        var popup = L.popup()
+        L.popup()
             .setLatLng(e.latlng)
             .setContent("Coordenadas: " + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4))
             .openOn(mapa);
