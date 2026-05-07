@@ -856,10 +856,33 @@
             ativarMapaPC();
         });
         
-        // Clique fora do mapa desativa
+        // Clique fora do mapa desativa (exceto se for nos controles)
         document.addEventListener('click', function(e) {
+            // Se clicou dentro do mapa, não desativa
             if (mapaDiv.contains(e.target)) return;
+            
+            // Se clicou dentro da área de controles do mapa (selects, botões, info-box), não desativa
+            const controleMapa = document.querySelector('.controle-mapa');
+            const infoBox = document.querySelector('.info-box');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            if (controleMapa && controleMapa.contains(e.target)) return;
+            if (infoBox && infoBox.contains(e.target)) return;
+            if (fullscreenBtn && fullscreenBtn.contains(e.target)) return;
+            
+            // Se clicou em popup do Leaflet, não desativa
             if (e.target.closest('.leaflet-popup')) return;
+            
+            // Se clicou em qualquer botão com classe .btn-minimal ou .btn-sm-minimal, não desativa
+            if (e.target.closest('.btn-minimal') || e.target.closest('.btn-sm-minimal')) return;
+            
+            // Se clicou em selects (.form-select), não desativa
+            if (e.target.closest('.form-select')) return;
+            
+            // Se clicou em labels, não desativa
+            if (e.target.closest('.form-label')) return;
+            
+            // Se chegou até aqui, pode desativar
             if (mapaAtivo) desativarMapaPC();
         });
         
