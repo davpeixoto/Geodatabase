@@ -495,7 +495,7 @@
             
             <!-- Botão de expandir mapa (aparece só no celular) -->
             <div class="btn-expand-mapa-mobile">
-                <button id="expandMobileBtn" class="btn-sm-minimal" style="background-color: #007aff;">🗺️ Expandir mapa</button>
+                <button id="expandMobileBtn" class="btn-sm-minimal" style="background-color: #007aff;"> Expandir mapa</button>
             </div>
             
             <!-- Botão de tela cheia (aparece só no PC) -->
@@ -695,13 +695,13 @@
         
         if (isExpanded) {
             mapaDiv.classList.remove('expandido-mobile');
-            expandMobileBtn.innerHTML = '🗺️ Expandir mapa';
+            expandMobileBtn.innerHTML = 'Expandir mapa';
             expandMobileBtn.style.backgroundColor = '#007aff';
             // Scroll suave até o mapa depois de contrair
             mapaDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
             mapaDiv.classList.add('expandido-mobile');
-            expandMobileBtn.innerHTML = '🔄 Minimizar mapa';
+            expandMobileBtn.innerHTML = 'Minimizar mapa';
             expandMobileBtn.style.backgroundColor = '#6c6c70';
             // Scroll suave até o mapa depois de expandir
             setTimeout(() => {
@@ -747,7 +747,7 @@
         if (window.innerWidth > 768 && mapaDiv.classList.contains('expandido-mobile')) {
             mapaDiv.classList.remove('expandido-mobile');
             if (expandMobileBtn) {
-                expandMobileBtn.innerHTML = '🗺️ Expandir mapa';
+                expandMobileBtn.innerHTML = 'Expandir mapa';
                 expandMobileBtn.style.backgroundColor = '#007aff';
             }
         }
