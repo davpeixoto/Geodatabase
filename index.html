@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>GEODatabase - Plataforma de Dados Geomorfométricos</title>
     
     <!-- CSS do Leaflet -->
@@ -120,6 +120,7 @@
             transition: all 0.3s ease;
             display: inline-block;
             text-decoration: none;
+            cursor: pointer;
         }
         
         .btn-minimal:hover {
@@ -139,11 +140,29 @@
             transition: all 0.3s ease;
             display: inline-block;
             text-decoration: none;
+            cursor: pointer;
         }
         
         .btn-outline-minimal:hover {
             background-color: #007aff;
             color: white;
+        }
+        
+        /* Botão pequeno para ações (expansão, tela cheia) */
+        .btn-sm-minimal {
+            background-color: #007aff;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 13px;
+            border: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .btn-sm-minimal:hover {
+            background-color: #0051b3;
         }
         
         /* ===== SEÇÕES ===== */
@@ -205,12 +224,44 @@
             box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
         }
         
+        /* Estilos do mapa - padrão PC */
+        .mapa-wrapper {
+            position: relative;
+        }
+        
         #mapa {
             height: 520px;
             width: 100%;
             border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             border: 1px solid #e9e9ef;
+            transition: height 0.3s ease;
+        }
+        
+        /* Botão de expandir mapa (para celular) - escondido no PC */
+        .btn-expand-mapa-mobile {
+            display: none;
+            width: 100%;
+            margin-top: 12px;
+        }
+        
+        /* Botão de tela cheia (para PC) */
+        .btn-fullscreen-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+        
+        #fullscreenBtn {
+            background-color: #f9f9fb;
+            color: #007aff;
+            border: 1px solid #e9e9ef;
+            padding: 6px 16px;
+            font-size: 13px;
+        }
+        
+        #fullscreenBtn:hover {
+            background-color: #e9e9ef;
         }
         
         .info-box {
@@ -304,7 +355,7 @@
             margin: 24px 0;
         }
         
-        /* Responsivo */
+        /* ===== RESPONSIVO (CELULAR) ===== */
         @media (max-width: 768px) {
             .carrossel-content h2 {
                 font-size: 32px;
@@ -314,6 +365,33 @@
             }
             .carrossel-content {
                 padding-top: 140px;
+            }
+            
+            /* Mapa menor no celular inicialmente */
+            #mapa {
+                height: 280px;
+            }
+            
+            /* Botão de expandir aparece no celular */
+            .btn-expand-mapa-mobile {
+                display: block;
+            }
+            
+            /* Botão de tela cheia some no celular (usamos o expandir) */
+            .btn-fullscreen-container {
+                display: none;
+            }
+            
+            /* Se mapa estiver expandido no celular */
+            #mapa.expandido-mobile {
+                height: 75vh;
+            }
+        }
+        
+        /* ===== TELA GRANDE (PC) - garantia ===== */
+        @media (min-width: 769px) {
+            .btn-expand-mapa-mobile {
+                display: none !important;
             }
         }
     </style>
@@ -411,8 +489,20 @@
             </div>
         </div>
         
-        <!-- MAPA -->
-        <div id="mapa"></div>
+        <!-- MAPA WRAPPER -->
+        <div class="mapa-wrapper">
+            <div id="mapa"></div>
+            
+            <!-- Botão de expandir mapa (aparece só no celular) -->
+            <div class="btn-expand-mapa-mobile">
+                <button id="expandMobileBtn" class="btn-sm-minimal" style="background-color: #007aff;">🗺️ Expandir mapa</button>
+            </div>
+            
+            <!-- Botão de tela cheia (aparece só no PC) -->
+            <div class="btn-fullscreen-container">
+                <button id="fullscreenBtn" class="btn-sm-minimal">⛶ Tela cheia</button>
+            </div>
+        </div>
         
         <div class="info-box">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -594,6 +684,73 @@
             .setLatLng(e.latlng)
             .setContent("Coordenadas: " + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4))
             .openOn(mapa);
+    });
+    
+    // ===== FUNCIONALIDADE CELULAR: expandir/contrair mapa =====
+    const mapaDiv = document.getElementById('mapa');
+    const expandMobileBtn = document.getElementById('expandMobileBtn');
+    
+    function toggleMobileExpand() {
+        const isExpanded = mapaDiv.classList.contains('expandido-mobile');
+        
+        if (isExpanded) {
+            mapaDiv.classList.remove('expandido-mobile');
+            expandMobileBtn.innerHTML = '🗺️ Expandir mapa';
+            expandMobileBtn.style.backgroundColor = '#007aff';
+            // Scroll suave até o mapa depois de contrair
+            mapaDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            mapaDiv.classList.add('expandido-mobile');
+            expandMobileBtn.innerHTML = '🔄 Minimizar mapa';
+            expandMobileBtn.style.backgroundColor = '#6c6c70';
+            // Scroll suave até o mapa depois de expandir
+            setTimeout(() => {
+                mapaDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    }
+    
+    if (expandMobileBtn) {
+        expandMobileBtn.addEventListener('click', toggleMobileExpand);
+    }
+    
+    // ===== FUNCIONALIDADE PC: tela cheia (fullscreen) =====
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    
+    function toggleFullscreen() {
+        const elem = mapaDiv;
+        
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen().catch(err => {
+                console.warn(`Erro ao entrar em tela cheia: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+    }
+    
+    // Ao sair do modo fullscreen, garantir que o Leaflet se ajuste
+    document.addEventListener('fullscreenchange', function() {
+        setTimeout(function() {
+            mapa.invalidateSize();
+        }, 100);
+    });
+    
+    // Ajustar tamanho do mapa quando a tela for redimensionada (útil para mobile)
+    window.addEventListener('resize', function() {
+        mapa.invalidateSize();
+        // Se estiver no PC e o mapa estiver expandido no mobile (caso a tela seja redimensionada), remover expansão
+        if (window.innerWidth > 768 && mapaDiv.classList.contains('expandido-mobile')) {
+            mapaDiv.classList.remove('expandido-mobile');
+            if (expandMobileBtn) {
+                expandMobileBtn.innerHTML = '🗺️ Expandir mapa';
+                expandMobileBtn.style.backgroundColor = '#007aff';
+            }
+        }
     });
 </script>
 
