@@ -229,13 +229,46 @@
             position: relative;
         }
         
+        /* Efeito de proteção ao scroll (PC) */
         #mapa {
             height: 520px;
             width: 100%;
             border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             border: 1px solid #e9e9ef;
-            transition: height 0.3s ease;
+            transition: filter 0.2s ease, opacity 0.2s ease;
+        }
+        
+        /* Classe para mapa inativo (bloqueado, fosco) – só aplica em PC via JS */
+        #mapa.mapa-inativo {
+            filter: blur(2px) brightness(0.98);
+            opacity: 0.92;
+            cursor: pointer;
+        }
+        
+        /* Classe para mapa ativo (interação liberada) */
+        #mapa.mapa-ativo {
+            filter: none;
+            opacity: 1;
+            box-shadow: 0 0 0 3px #007aff, 0 2px 12px rgba(0,0,0,0.04);
+        }
+        
+        /* Hint para indicar que precisa clicar (apenas PC) */
+        .mapa-hint {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.65);
+            color: white;
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 24px;
+            pointer-events: none;
+            z-index: 1000;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            letter-spacing: -0.2px;
+            transition: opacity 0.2s;
         }
         
         /* Botão de expandir mapa (para celular) - escondido no PC */
@@ -370,6 +403,21 @@
             /* Mapa menor no celular inicialmente */
             #mapa {
                 height: 280px;
+                filter: none !important;
+                opacity: 1 !important;
+                cursor: default;
+            }
+            
+            /* Remove efeito fosco e hint no celular */
+            #mapa.mapa-inativo,
+            #mapa.mapa-ativo {
+                filter: none !important;
+                opacity: 1 !important;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            }
+            
+            .mapa-hint {
+                display: none !important;
             }
             
             /* Botão de expandir aparece no celular */
@@ -388,7 +436,7 @@
             }
         }
         
-        /* ===== TELA GRANDE (PC) - garantia ===== */
+        /* ===== TELA GRANDE (PC) ===== */
         @media (min-width: 769px) {
             .btn-expand-mapa-mobile {
                 display: none !important;
@@ -493,14 +541,17 @@
         <div class="mapa-wrapper">
             <div id="mapa"></div>
             
+            <!-- Dica visual: clique para interagir (aparece apenas no PC via CSS) -->
+            <div class="mapa-hint">Clique no mapa para interagir</div>
+            
             <!-- Botão de expandir mapa (aparece só no celular) -->
             <div class="btn-expand-mapa-mobile">
-                <button id="expandMobileBtn" class="btn-sm-minimal" style="background-color: #007aff;"> Expandir mapa</button>
+                <button id="expandMobileBtn" class="btn-sm-minimal" style="background-color: #007aff;">Expandir mapa</button>
             </div>
             
             <!-- Botão de tela cheia (aparece só no PC) -->
             <div class="btn-fullscreen-container">
-                <button id="fullscreenBtn" class="btn-sm-minimal">⛶ Tela cheia</button>
+                <button id="fullscreenBtn" class="btn-sm-minimal">Tela cheia</button>
             </div>
         </div>
         
@@ -697,13 +748,11 @@
             mapaDiv.classList.remove('expandido-mobile');
             expandMobileBtn.innerHTML = 'Expandir mapa';
             expandMobileBtn.style.backgroundColor = '#007aff';
-            // Scroll suave até o mapa depois de contrair
             mapaDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
             mapaDiv.classList.add('expandido-mobile');
             expandMobileBtn.innerHTML = 'Minimizar mapa';
             expandMobileBtn.style.backgroundColor = '#6c6c70';
-            // Scroll suave até o mapa depois de expandir
             setTimeout(() => {
                 mapaDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
@@ -743,7 +792,6 @@
     // Ajustar tamanho do mapa quando a tela for redimensionada (útil para mobile)
     window.addEventListener('resize', function() {
         mapa.invalidateSize();
-        // Se estiver no PC e o mapa estiver expandido no mobile (caso a tela seja redimensionada), remover expansão
         if (window.innerWidth > 768 && mapaDiv.classList.contains('expandido-mobile')) {
             mapaDiv.classList.remove('expandido-mobile');
             if (expandMobileBtn) {
@@ -752,6 +800,75 @@
             }
         }
     });
+    
+    // ===== PROTEÇÃO DE SCROLL NO PC (EFEITO FOSCO + BLOQUEIO) =====
+    // Verifica se é PC (largura > 768px)
+    function isDesktop() {
+        return window.innerWidth > 768;
+    }
+    
+    let mapaAtivo = false;
+    
+    function ativarMapaPC() {
+        if (!isDesktop()) return;
+        if (mapaAtivo) return;
+        mapaAtivo = true;
+        mapaDiv.classList.remove('mapa-inativo');
+        mapaDiv.classList.add('mapa-ativo');
+        // Habilita scroll do Leaflet
+        mapa.scrollWheelZoom.enable();
+        // Esconde hint suavemente
+        const hint = document.querySelector('.mapa-hint');
+        if (hint) hint.style.opacity = '0';
+    }
+    
+    function desativarMapaPC() {
+        if (!isDesktop()) return;
+        if (!mapaAtivo) return;
+        mapaAtivo = false;
+        mapaDiv.classList.remove('mapa-ativo');
+        mapaDiv.classList.add('mapa-inativo');
+        // Desabilita scroll do Leaflet
+        mapa.scrollWheelZoom.disable();
+        // Mostra hint novamente
+        const hint = document.querySelector('.mapa-hint');
+        if (hint) hint.style.opacity = '1';
+    }
+    
+    // Inicialização apenas para desktop
+    if (isDesktop()) {
+        mapaDiv.classList.add('mapa-inativo');
+        mapa.scrollWheelZoom.disable();
+        
+        // Clique no mapa ativa
+        mapaDiv.addEventListener('click', function(e) {
+            if (e.target.closest('.leaflet-popup')) return;
+            ativarMapaPC();
+        });
+        
+        // Clique fora do mapa desativa
+        document.addEventListener('click', function(e) {
+            if (mapaDiv.contains(e.target)) return;
+            if (e.target.closest('.leaflet-popup')) return;
+            if (mapaAtivo) desativarMapaPC();
+        });
+        
+        // Ao redimensionar, se voltar para desktop mantém estado inativo
+        window.addEventListener('resize', function() {
+            if (isDesktop()) {
+                if (!mapaAtivo) {
+                    mapaDiv.classList.add('mapa-inativo');
+                    mapa.scrollWheelZoom.disable();
+                }
+            }
+        });
+    } else {
+        // Celular: sem proteção, sem classes especiais
+        mapaDiv.classList.remove('mapa-inativo', 'mapa-ativo');
+        mapa.scrollWheelZoom.enable();
+        const hint = document.querySelector('.mapa-hint');
+        if (hint) hint.style.display = 'none';
+    }
 </script>
 
 </body>
