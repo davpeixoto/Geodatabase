@@ -237,11 +237,13 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             border: 1px solid #e9e9ef;
             transition: filter 0.2s ease, opacity 0.2s ease;
+            position: relative;
+            z-index: 1;
         }
         
         /* Classe para mapa inativo (bloqueado, fosco) – só aplica em PC via JS */
         #mapa.mapa-inativo {
-            filter: blur(2px) brightness(0.98);
+            filter: blur(3px) brightness(0.97);
             opacity: 0.92;
             cursor: pointer;
         }
@@ -253,22 +255,25 @@
             box-shadow: 0 0 0 3px #007aff, 0 2px 12px rgba(0,0,0,0.04);
         }
         
-        /* Hint para indicar que precisa clicar (apenas PC) */
-        .mapa-hint {
+        /* Hint centralizada no mapa */
+        .mapa-hint-central {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.65);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            font-size: 12px;
-            padding: 6px 14px;
-            border-radius: 24px;
+            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 30px;
             pointer-events: none;
             z-index: 1000;
             font-weight: 500;
             backdrop-filter: blur(4px);
-            letter-spacing: -0.2px;
+            white-space: nowrap;
             transition: opacity 0.2s;
+            text-align: center;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
         }
         
         /* Botão de expandir mapa (para celular) - escondido no PC */
@@ -416,7 +421,7 @@
                 box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             }
             
-            .mapa-hint {
+            .mapa-hint-central {
                 display: none !important;
             }
             
@@ -541,8 +546,8 @@
         <div class="mapa-wrapper">
             <div id="mapa"></div>
             
-            <!-- Dica visual: clique para interagir (aparece apenas no PC via CSS) -->
-            <div class="mapa-hint">Clique no mapa para interagir</div>
+            <!-- Dica centralizada: clique para interagir (aparece apenas no PC via CSS) -->
+            <div class="mapa-hint-central" id="mapaHintCentral">Clique no mapa para interagir</div>
             
             <!-- Botão de expandir mapa (aparece só no celular) -->
             <div class="btn-expand-mapa-mobile">
@@ -729,17 +734,10 @@
             e.target.options[e.target.selectedIndex].text;
     });
     
-    // Clique no mapa
-    mapa.on('click', function(e) {
-        L.popup()
-            .setLatLng(e.latlng)
-            .setContent("Coordenadas: " + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4))
-            .openOn(mapa);
-    });
-    
     // ===== FUNCIONALIDADE CELULAR: expandir/contrair mapa =====
     const mapaDiv = document.getElementById('mapa');
     const expandMobileBtn = document.getElementById('expandMobileBtn');
+    const mapaHintCentral = document.getElementById('mapaHintCentral');
     
     function toggleMobileExpand() {
         const isExpanded = mapaDiv.classList.contains('expandido-mobile');
@@ -817,9 +815,13 @@
         mapaDiv.classList.add('mapa-ativo');
         // Habilita scroll do Leaflet
         mapa.scrollWheelZoom.enable();
-        // Esconde hint suavemente
-        const hint = document.querySelector('.mapa-hint');
-        if (hint) hint.style.opacity = '0';
+        // Esconde hint central com fade
+        if (mapaHintCentral) {
+            mapaHintCentral.style.opacity = '0';
+            setTimeout(() => {
+                if (mapaHintCentral) mapaHintCentral.style.display = 'none';
+            }, 200);
+        }
     }
     
     function desativarMapaPC() {
@@ -830,15 +832,23 @@
         mapaDiv.classList.add('mapa-inativo');
         // Desabilita scroll do Leaflet
         mapa.scrollWheelZoom.disable();
-        // Mostra hint novamente
-        const hint = document.querySelector('.mapa-hint');
-        if (hint) hint.style.opacity = '1';
+        // Mostra hint central novamente
+        if (mapaHintCentral) {
+            mapaHintCentral.style.display = 'block';
+            setTimeout(() => {
+                if (mapaHintCentral) mapaHintCentral.style.opacity = '1';
+            }, 10);
+        }
     }
     
     // Inicialização apenas para desktop
     if (isDesktop()) {
         mapaDiv.classList.add('mapa-inativo');
         mapa.scrollWheelZoom.disable();
+        if (mapaHintCentral) {
+            mapaHintCentral.style.display = 'block';
+            mapaHintCentral.style.opacity = '1';
+        }
         
         // Clique no mapa ativa
         mapaDiv.addEventListener('click', function(e) {
@@ -859,6 +869,12 @@
                 if (!mapaAtivo) {
                     mapaDiv.classList.add('mapa-inativo');
                     mapa.scrollWheelZoom.disable();
+                    if (mapaHintCentral) {
+                        mapaHintCentral.style.display = 'block';
+                        mapaHintCentral.style.opacity = '1';
+                    }
+                } else {
+                    if (mapaHintCentral) mapaHintCentral.style.display = 'none';
                 }
             }
         });
@@ -866,8 +882,7 @@
         // Celular: sem proteção, sem classes especiais
         mapaDiv.classList.remove('mapa-inativo', 'mapa-ativo');
         mapa.scrollWheelZoom.enable();
-        const hint = document.querySelector('.mapa-hint');
-        if (hint) hint.style.display = 'none';
+        if (mapaHintCentral) mapaHintCentral.style.display = 'none';
     }
 </script>
 
