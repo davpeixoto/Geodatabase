@@ -327,8 +327,12 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.04);
         }
         
-        .card-equipe i {
-            color: #007aff;
+        /* Estilo para as fotos redondas da equipe */
+        .foto-equipe {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 16px;
         }
         
@@ -336,6 +340,8 @@
             font-weight: 600;
             font-size: 18px;
             color: #1d1d1f;
+            margin-top: 8px;
+            margin-bottom: 4px;
         }
         
         .card-equipe .text-muted {
@@ -425,6 +431,11 @@
             
             #mapa.expandido-mobile {
                 height: 75vh;
+            }
+            
+            .foto-equipe {
+                width: 80px;
+                height: 80px;
             }
         }
         
@@ -600,7 +611,7 @@
     <div class="row g-4">
         <div class="col-md-4">
             <div class="card-equipe">
-                <i class="fas fa-user-circle fa-3x"></i>
+                <img src="Davi.JPG" alt="Davi Peixoto" class="foto-equipe" onerror="this.src='https://placehold.co/100x100?text=Davi'">
                 <h5>Davi Peixoto</h5>
                 <p class="text-muted">Bolsista CNPq</p>
                 <p class="small">davi61640@estudante.ifb.edu.br</p>
@@ -608,7 +619,7 @@
         </div>
         <div class="col-md-4">
             <div class="card-equipe">
-                <i class="fas fa-user-circle fa-3x"></i>
+                <img src="Beatriz.jpg" alt="Beatriz Guedes" class="foto-equipe" onerror="this.src='https://placehold.co/100x100?text=Beatriz'">
                 <h5>Beatriz Guedes</h5>
                 <p class="text-muted">Bolsista CNPq</p>
                 <p class="small">beatriz61611@estudante.ifb.edu.br</p>
@@ -616,7 +627,7 @@
         </div>
         <div class="col-md-4">
             <div class="card-equipe">
-                <i class="fas fa-user-tie fa-3x"></i>
+                <img src="Gervásio.png" alt="Prof. Gervásio Neto" class="foto-equipe" onerror="this.src='https://placehold.co/100x100?text=Prof.'">
                 <h5>Prof. Gervásio Neto</h5>
                 <p class="text-muted">Orientador</p>
                 <p class="small">gervasio.neto@ifb.edu.br</p>
