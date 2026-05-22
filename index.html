@@ -108,6 +108,22 @@
             opacity: 0.9;
         }
         
+        /* Remove as setas de navegação do Swiper */
+        .swiper-button-prev,
+        .swiper-button-next {
+            display: none !important;
+        }
+        
+        /* Estilização dos pontinhos (pagination) */
+        .swiper-pagination-bullet {
+            background-color: rgba(255,255,255,0.5) !important;
+            opacity: 1 !important;
+        }
+        
+        .swiper-pagination-bullet-active {
+            background-color: #007aff !important;
+        }
+        
         /* Botões minimalistas (azul) */
         .btn-minimal {
             background-color: #007aff;
@@ -327,7 +343,6 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.04);
         }
         
-        /* Estilo para as fotos redondas da equipe */
         .foto-equipe {
             width: 100px;
             height: 100px;
@@ -502,8 +517,7 @@
         </div>
     </div>
     <div class="swiper-pagination"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
+    <!-- Botões de navegação removidos -->
 </div>
 
 <!-- MAPA -->
@@ -676,7 +690,7 @@
         loop: true,
         autoplay: { delay: 5000, disableOnInteraction: false },
         pagination: { el: '.swiper-pagination', clickable: true },
-        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        navigation: false,  // Remove as setas completamente
     });
     
     var mapa = L.map('mapa').setView([-15.5, -55.0], 4);
